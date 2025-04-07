@@ -21,7 +21,7 @@ export default function LoginPage() {
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>일일 미션 트래커</CardTitle>
-          <CardDescription>로그인하여 일일 미션을 관리하세요</CardDescription>
+          <CardDescription>로그인을 진행하여 일일 미션을 관리하세요</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col space-y-4">
