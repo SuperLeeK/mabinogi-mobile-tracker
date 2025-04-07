@@ -1,7 +1,7 @@
 import type React from "react"
-import { AuthProvider } from "@/contexts/auth-context"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
+import { AuthProviderWrapper } from "@/components/auth-provider-wrapper"
 
 export const metadata = {
   title: "일일 미션 트래커",
@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProviderWrapper>{children}</AuthProviderWrapper>
         </ThemeProvider>
       </body>
     </html>
