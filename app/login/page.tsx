@@ -20,7 +20,7 @@ export default function LoginPage() {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>일일 미션 트래커</CardTitle>
+          <CardTitle>일일/주간 미션 트래커</CardTitle>
           <CardDescription>로그인을 진행하여 일일 미션을 관리하세요</CardDescription>
         </CardHeader>
         <CardContent>
