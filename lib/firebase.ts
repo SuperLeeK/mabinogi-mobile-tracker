@@ -1,6 +1,6 @@
-import { initializeApp, getApps, getApp } from "firebase/app"
-import { getAuth } from "firebase/auth"
-import { getFirestore } from "firebase/firestore"
+import { initializeApp, getApps, getApp, FirebaseApp } from "firebase/app"
+import { Auth, getAuth } from "firebase/auth"
+import { Firestore, getFirestore } from "firebase/firestore"
 
 // Firebase 구성 정보
 const firebaseConfig = {
@@ -13,7 +13,9 @@ const firebaseConfig = {
 }
 
 // 클라이언트 사이드에서만 Firebase 초기화
-let app, auth, db
+let app: FirebaseApp | undefined
+let auth: Auth | undefined
+let db: Firestore | undefined
 
 if (typeof window !== "undefined") {
   // 클라이언트 사이드에서만 실행
