@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { type Mission, getMissions, addMission, toggleMissionStatus, deleteMission } from "@/lib/missions"
@@ -23,19 +23,8 @@ export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login")
-    }
-  }, [user, loading, router])
-
-  useEffect(() => {
-    if (user) {
-      loadMissions()
-    }
-  }, [user, selectedDate])
-
-  const loadMissions = async () => {
+  // useCallback을 사용하여 loadMissions 함수를 메모이제이션
+  const loadMissions = useCallback(async () => {
     if (!user) return
 
     setIsLoading(true)
@@ -47,7 +36,19 @@ export default function DashboardPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [user, selectedDate]) // 의존성 배열에 user와 selectedDate 포함
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/login")
+    }
+  }, [user, loading, router])
+
+  useEffect(() => {
+    if (user) {
+      loadMissions()
+    }
+  }, [user, loadMissions]) // loadMissions를 의존성 배열에 추가
 
   const handleAddMission = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,18 +56,20 @@ export default function DashboardPage() {
 
     try {
       const missionId = await addMission(user.uid, newMission, selectedDate)
-      setMissions([
-        ...missions,
-        {
-          id: missionId,
-          userId: user.uid,
-          title: newMission,
-          completed: false,
-          date: selectedDate,
-          createdAt: new Date(),
-        },
-      ])
-      setNewMission("")
+      if (missionId) {
+        setMissions([
+          ...missions,
+          {
+            id: missionId,
+            userId: user.uid,
+            title: newMission,
+            completed: false,
+            date: selectedDate,
+            createdAt: new Date(),
+          },
+        ])
+        setNewMission("")
+      }
     } catch (error) {
       console.error("Error adding mission:", error)
     }
@@ -90,8 +93,12 @@ export default function DashboardPage() {
     }
   }
 
-  if (loading || !user) {
+  if (loading) {
     return <div className="flex items-center justify-center min-h-screen">로딩 중...</div>
+  }
+
+  if (!user) {
+    return null // 리디렉션이 처리되므로 아무것도 렌더링하지 않음
   }
 
   return (

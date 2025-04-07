@@ -17,11 +17,19 @@ let app: FirebaseApp | undefined
 let auth: Auth | undefined
 let db: Firestore | undefined
 
+// 클라이언트 사이드에서만 실행
 if (typeof window !== "undefined") {
-  // 클라이언트 사이드에서만 실행
-  app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
-  auth = getAuth(app)
-  db = getFirestore(app)
+  try {
+    if (!getApps().length) {
+      app = initializeApp(firebaseConfig)
+    } else {
+      app = getApp()
+    }
+    auth = getAuth(app)
+    db = getFirestore(app)
+  } catch (error) {
+    console.error("Firebase initialization error:", error)
+  }
 }
 
 export { app, auth, db }
